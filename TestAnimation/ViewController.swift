@@ -36,6 +36,8 @@ class ViewController: UIViewController {
         NSLayoutConstraint.activate(commonConstraints)
         NSLayoutConstraint.activate(collapsedContraints)
 
+        transformLabel()
+
         let viewGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewTapped(_:)))
         animatedView.addGestureRecognizer(viewGestureRecognizer)
 
@@ -51,29 +53,30 @@ class ViewController: UIViewController {
 
     @objc private func viewTapped(_ sender: Any) {
 
-        let labelScale: CGFloat
-
         if !isExpanded {
             NSLayoutConstraint.deactivate(collapsedContraints)
             NSLayoutConstraint.activate(expandedConstraints)
-            labelScale = 3
         } else {
             NSLayoutConstraint.deactivate(expandedConstraints)
             NSLayoutConstraint.activate(collapsedContraints)
-            labelScale = 1
         }
         isExpanded.toggle()
 
         UIView.animate(withDuration: 0.5) {
             self.view.layoutIfNeeded()
             self.makeAnimatedViewRound()
-            self.tapMeLabel.transform = CGAffineTransform(scaleX: labelScale, y: labelScale)
+            self.transformLabel()
         }
     }
 
     private func makeAnimatedViewRound() {
         animatedView.layer.cornerRadius = animatedView.bounds.width / 2
         animatedImageView.layer.cornerRadius = animatedImageView.bounds.width / 2
+    }
+
+    private func transformLabel() {
+        let scale: CGFloat = isExpanded ? 1 : 0.333333
+        tapMeLabel.transform = CGAffineTransform(scaleX: scale, y: scale)
     }
 }
 
